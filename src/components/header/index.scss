@@ -1,0 +1,15 @@
+.ant-layout-header {
+  color: #e6f7ff;
+  background-color: #38506d;
+
+  .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .right {
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+}

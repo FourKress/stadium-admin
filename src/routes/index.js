@@ -3,8 +3,8 @@ import { Route, Routes } from 'react-router-dom';
 import AuthRoute from './authRoute';
 import { Loading } from '../components/loading';
 
-const Order = lazy(() => import('../views/order'));
 const Login = lazy(() => import('../views/login'));
+const Order = lazy(() => import('../views/order'));
 const User = lazy(() => import('../views/user'));
 
 const routes = (
