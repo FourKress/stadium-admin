@@ -8,6 +8,7 @@ import React, { lazy } from 'react';
 
 const Order = lazy(() => import('../../views/order'));
 const User = lazy(() => import('../../views/user'));
+const Boss = lazy(() => import('../../views/boss'));
 
 const { Content } = Layout;
 
@@ -21,6 +22,7 @@ function MyLayout() {
           <Routes>
             <Route path="/" element={<Order />} />
             <Route path="/user" element={<User />} />
+            <Route path="/boss" element={<Boss />} />
           </Routes>
         </Content>
         <MyFooter>Footer</MyFooter>
