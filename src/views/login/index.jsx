@@ -12,6 +12,7 @@ function Login() {
     axios
       .post('/auth/adminLogin', {
         phoneNum: values.phoneNum,
+        adminPassword: values.password,
       })
       .then((res) => {
         const { token, userInfo } = res;
@@ -44,7 +45,7 @@ function Login() {
             label="密码"
             required={false}
             name="password"
-            initialValue={'17384094579'}
+            initialValue={'123456'}
             rules={[
               {
                 required: true,

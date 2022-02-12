@@ -6,6 +6,8 @@ import MyFooter from '../footer';
 import { Route, Routes } from 'react-router-dom';
 import React, { lazy } from 'react';
 
+import './index.scss';
+
 const Order = lazy(() => import('../../views/order'));
 const User = lazy(() => import('../../views/user'));
 const Boss = lazy(() => import('../../views/boss'));
@@ -19,11 +21,13 @@ function MyLayout() {
       <Layout>
         <MyHeader>Header</MyHeader>
         <Content>
-          <Routes>
-            <Route path="/" element={<Order />} />
-            <Route path="/user" element={<User />} />
-            <Route path="/boss" element={<Boss />} />
-          </Routes>
+          <div className={'main-warp'}>
+            <Routes>
+              <Route path="/" element={<Order />} />
+              <Route path="/user" element={<User />} />
+              <Route path="/boss" element={<Boss />} />
+            </Routes>
+          </div>
         </Content>
         <MyFooter>Footer</MyFooter>
       </Layout>

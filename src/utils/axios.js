@@ -56,14 +56,17 @@ Axios['interceptors'].request.use(
 Axios['interceptors'].response.use(
   (res) => {
     const { data, config } = res;
-
+    const { code } = data;
     if (config.headers.isLoading !== false) {
       hideLoading();
     }
-    if (data.code === 10000) {
+    if (code === 10000) {
       return data.data;
     } else {
-      return Promise.reject(data);
+      if (code === 10100) {
+        message.warning(data.message);
+      }
+      if (data) return Promise.reject(data);
     }
   },
   async (err) => {
