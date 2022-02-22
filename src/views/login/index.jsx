@@ -30,7 +30,6 @@ function Login() {
             label="账号"
             required={false}
             name="phoneNum"
-            initialValue={'17384094579'}
             rules={[
               {
                 required: true,
@@ -45,7 +44,6 @@ function Login() {
             label="密码"
             required={false}
             name="password"
-            initialValue={'123456'}
             rules={[
               {
                 required: true,
