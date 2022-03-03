@@ -49,11 +49,11 @@ function Order() {
     },
     {
       title: '场主',
-      key: 'bossId',
-      dataIndex: 'bossId',
-      render: (bossId) => <span>
-        <img className={'avatarUrl'} src={bossId.avatarUrl} />
-        <span>{bossId.nickName}</span>
+      key: 'bossInfo',
+      dataIndex: 'bossInfo',
+      render: (bossInfo) => <span>
+        <img className={'avatarUrl'} src={bossInfo?.avatarUrl} />
+        <span>{bossInfo?.nickName}</span>
       </span>,
     },
     {

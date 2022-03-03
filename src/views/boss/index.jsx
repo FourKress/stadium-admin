@@ -80,7 +80,9 @@ function Boss() {
         spaces: [],
         district: '',
         longitude: 0,
-        latitude: 0
+        latitude: 0,
+        wxGroup: '',
+        welcomeWords: '',
       })
       .then((res) => {
         getList();
