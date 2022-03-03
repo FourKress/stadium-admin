@@ -31,37 +31,61 @@ function Boss() {
       key: 'avatarUrl',
       render: (src) => <img className={'avatarUrl'} src={src} />,
     },
-    {
-      title: '状态',
-      dataIndex: 'bossStatus',
-      key: 'bossStatus',
-      render: (flag) => (
-        <Tag color={flag ? 'success' : 'error'}>{flag ? '启用' : '禁用'}</Tag>
-      ),
-    },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'bossStatus',
+    //   key: 'bossStatus',
+    //   render: (flag) => (
+    //     <Tag color={flag ? 'success' : 'error'}>{flag ? '启用' : '禁用'}</Tag>
+    //   ),
+    // },
     {
       title: '操作',
       key: 'action',
-      render: ({ id, bossStatus }) => (
+      render: ({ id, bossStatus, bossId, phoneNum }) => (
         <Space size="middle">
-          <a onClick={() => changeBoss(id, bossStatus)}>
-            {bossStatus ? '禁用场主' : '启用场主'}
-          </a>
+          {/*<a onClick={() => changeBoss(id, bossStatus)}>*/}
+          {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
+          {/*</a>*/}
+          <a onClick={() => addStadium(bossId, phoneNum)}>添加球场</a>
         </Space>
       ),
     },
   ];
 
-  const changeBoss = (id, bossStatus) => {
+  // const changeBoss = (id, bossStatus) => {
+  //   axios
+  //     .post('/user/changeBossStatus', {
+  //       id,
+  //       bossStatus: !bossStatus,
+  //     })
+  //     .then((res) => {
+  //       getList();
+  //     });
+  // };
+
+  const addStadium = (bossId, phoneNum) => {
     axios
-      .post('/user/changeBossStatus', {
-        id,
-        bossStatus: !bossStatus,
+      .post('/stadium/add', {
+        bossId,
+        phoneNum,
+        name: '我的的球场',
+        address: '',
+        stadiumUrls: [],
+        remarks: '',
+        description: '',
+        city: '',
+        province: '',
+        country: '',
+        spaces: [],
+        district: '',
+        longitude: 0,
+        latitude: 0
       })
       .then((res) => {
         getList();
       });
-  };
+  }
 
   return (
     <div className="Boss">

@@ -33,22 +33,76 @@ function Order() {
 
   const columns = [
     {
-      title: '下单用户',
-      key: 'nickName',
-      dataIndex: ['user', 'nickName'],
-      render: (nickName) => <span>{nickName}</span>,
+      title: '订单ID',
+      key: 'id',
+      dataIndex: 'id',
+      render: (id) => <span>{id}</span>,
     },
     {
-      title: '头像',
-      dataIndex: ['user', 'avatarUrl'],
-      key: 'avatarUrl',
-      render: (src) => <img className={'avatarUrl'} src={src} />,
+      title: '下单用户',
+      key: 'nickName',
+      dataIndex: 'user',
+      render: (user) => <span>
+        <img className={'avatarUrl'} src={user.avatarUrl} />
+        <span>{user.nickName}</span>
+      </span>,
+    },
+    {
+      title: '场主',
+      key: 'bossId',
+      dataIndex: 'bossId',
+      render: (bossId) => <span>
+        <img className={'avatarUrl'} src={bossId.avatarUrl} />
+        <span>{bossId.nickName}</span>
+      </span>,
+    },
+    {
+      title: '球场',
+      key: 'stadiumId',
+      dataIndex: 'stadiumId',
+      render: (stadiumId) => <span>{stadiumId.name}</span>,
+    },
+    {
+      title: '场地',
+      key: 'spaceId',
+      dataIndex: 'spaceId',
+      render: (spaceId) => <span>{spaceId.name}</span>,
+    },
+    {
+      title: '场次',
+      key: 'matchId',
+      dataIndex: 'matchId',
+      render: (matchId) => <span>{matchId.runDate}-{matchId.startAt}-{matchId.endAt}</span>,
+    },
+    {
+      title: '是否新购月卡',
+      key: 'newMonthlyCard',
+      dataIndex: 'newMonthlyCard',
+      render: (newMonthlyCard) => <span>{newMonthlyCard ? '是' : '否'}</span>,
+    },
+    {
+      title: '是否月卡支付',
+      key: 'isMonthlyCard',
+      dataIndex: 'isMonthlyCard',
+      render: (isMonthlyCard) => <span>{isMonthlyCard ? '是' : '否'}</span>,
+    },
+    {
+      title: '支付金额',
+      key: 'payAmount',
+      dataIndex: 'payAmount',
+      render: (payAmount) => <span>{payAmount.toFixed(2)}</span>,
+    },
+    {
+      title: '报名人数',
+      key: 'personCount',
+      dataIndex: 'personCount',
+      render: (personCount) => <span>{personCount}</span>,
     },
     {
       title: '订单状态',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => <Tag color={'success'}>{statusMap[status]}</Tag>,
+      render: (status) => <span>{statusMap[status]}</span>,
     },
     // {
     //   title: '操作',
@@ -80,6 +134,7 @@ function Order() {
         rowKey={(record) => record.id}
         columns={columns}
         dataSource={orderList}
+        scroll={{ x: 1300 }}
       />
     </div>
   );
