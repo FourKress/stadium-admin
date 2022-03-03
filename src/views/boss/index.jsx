@@ -69,7 +69,7 @@ function Boss() {
       .post('/stadium/add', {
         bossId,
         phoneNum,
-        name: '我的的球场',
+        name: '我的球场',
         address: '',
         stadiumUrls: [],
         remarks: '',
@@ -82,6 +82,7 @@ function Boss() {
         longitude: 0,
         latitude: 0,
         wxGroup: '',
+        wxGroupId: '',
         welcomeWords: '',
       })
       .then((res) => {
