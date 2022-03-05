@@ -1,11 +1,15 @@
 import axios from '../../utils/axios';
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Space, Modal, Input } from 'antd';
 import { useState, useEffect } from 'react';
 
 import './index.scss';
 
 function Boss() {
   const [bossList, setBossList] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [stadiumInfo, setStadiumInfo] = useState({});
+  const [stadiumName, setStadiumName] = useState('');
 
   useEffect(() => {
     getList();
@@ -47,7 +51,7 @@ function Boss() {
           {/*<a onClick={() => changeBoss(id, bossStatus)}>*/}
           {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
           {/*</a>*/}
-          <a onClick={() => addStadium(bossId, phoneNum)}>添加球场</a>
+          <a onClick={() => showAddDialog({ bossId, phoneNum })}>添加球场</a>
         </Space>
       ),
     },
@@ -64,12 +68,24 @@ function Boss() {
   //     });
   // };
 
-  const addStadium = (bossId, phoneNum) => {
+  const showAddDialog = (stadiumInfo) => {
+    setStadiumInfo(stadiumInfo);
+    setVisible(true);
+  };
+
+  const handleStadiumName = (event) => {
+    const value = event.target.value;
+    setStadiumName(value);
+  };
+
+  const addStadium = () => {
+    setConfirmLoading(true);
+    const { bossId, phoneNum } = stadiumInfo;
     axios
       .post('/stadium/add', {
         bossId,
         phoneNum,
-        name: '我的球场',
+        name: stadiumName,
         address: '',
         stadiumUrls: [],
         remarks: '',
@@ -86,9 +102,17 @@ function Boss() {
         welcomeWords: '',
       })
       .then((res) => {
+        setConfirmLoading(false);
+        setVisible(false);
+        setStadiumInfo({});
+        setStadiumName('');
         getList();
+      })
+      .catch((err) => {
+        setConfirmLoading(false);
+        console.log(err);
       });
-  }
+  };
 
   return (
     <div className="Boss">
@@ -97,6 +121,22 @@ function Boss() {
         columns={columns}
         dataSource={bossList}
       />
+      <Modal
+        title="添加球场"
+        visible={visible}
+        okText="确定"
+        cancelText="取消"
+        onOk={() => addStadium()}
+        confirmLoading={confirmLoading}
+        onCancel={() => setVisible(false)}
+      >
+        <Input
+          maxLength={12}
+          value={stadiumName}
+          placeholder="请输入球场名称"
+          onChange={(event) => handleStadiumName(event)}
+        />
+      </Modal>
     </div>
   );
 }
