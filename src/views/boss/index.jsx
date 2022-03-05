@@ -1,5 +1,5 @@
 import axios from '../../utils/axios';
-import { Table, Tag, Space, Modal, Input } from 'antd';
+import {Table, Tag, Space, Modal, Input, message} from 'antd';
 import { useState, useEffect } from 'react';
 
 import './index.scss';
@@ -78,7 +78,11 @@ function Boss() {
     setStadiumName(value);
   };
 
-  const addStadium = () => {
+  const addStadium = async () => {
+    if (!stadiumName) {
+      await message.warning('请输入球场名称');
+      return
+    }
     setConfirmLoading(true);
     const { bossId, phoneNum } = stadiumInfo;
     axios
