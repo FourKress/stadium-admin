@@ -118,6 +118,12 @@ function Boss() {
       });
   };
 
+  const onCancel = () => {
+    setVisible(false);
+    setStadiumInfo({});
+    setStadiumName('');
+  }
+
   return (
     <div className="Boss">
       <Table
@@ -132,7 +138,7 @@ function Boss() {
         cancelText="取消"
         onOk={() => addStadium()}
         confirmLoading={confirmLoading}
-        onCancel={() => setVisible(false)}
+        onCancel={() => onCancel()}
       >
         <Input
           maxLength={12}

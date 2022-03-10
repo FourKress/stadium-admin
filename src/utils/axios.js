@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Component } from 'react';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { createLoading, closeLoading } from '../components/loading';
 
 const Axios = axios.create({
@@ -70,13 +70,27 @@ Axios['interceptors'].response.use(
     }
   },
   async (err) => {
+    const {statusCode, message : msg} = err.response.data;
     if (err.config.headers['isLoading'] !== false) {
       hideLoading();
     }
-    if (err.message === 'Network Error') {
+    if (statusCode === 401) {
+      localStorage.clear();
+      Modal.error({
+        centered: true,
+        content: '登录失效，请重新登录',
+        keyboard: false,
+        title: '提示',
+        okText: '确定',
+        okButtonProps: {
+          href: '/#/login'
+        }
+      });
+    } else if(statusCode === 400) {
+      await message.warning(msg);
+    }else if (err.message === 'Network Error') {
       await message.warning('网络连接异常！');
-    }
-    if (err.code === 'ECONNABORTED') {
+    } else if (err.code === 'ECONNABORTED') {
       await message.warning('请求超时，请重试');
     }
     return Promise.reject(err);

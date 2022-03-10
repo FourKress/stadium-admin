@@ -11,6 +11,7 @@ import './index.scss';
 const Order = lazy(() => import('../../views/order'));
 const User = lazy(() => import('../../views/user'));
 const Boss = lazy(() => import('../../views/boss'));
+const Stadium = lazy(() => import('../../views/stadium'));
 
 const { Content } = Layout;
 
@@ -26,6 +27,7 @@ function MyLayout() {
               <Route path="/" element={<Order />} />
               <Route path="/user" element={<User />} />
               <Route path="/boss" element={<Boss />} />
+              <Route path="/stadium" element={<Stadium />} />
             </Routes>
           </div>
         </Content>

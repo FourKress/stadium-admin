@@ -35,6 +35,9 @@ function MySider() {
           <Menu.Item key="boss" icon={<WalletOutlined />}>
             场主管理
           </Menu.Item>
+          <Menu.Item key="stadium" icon={<WalletOutlined />}>
+            场馆管理
+          </Menu.Item>
         </Menu>
       </div>
     </Sider>
