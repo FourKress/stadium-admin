@@ -1,20 +1,29 @@
 import axios from '../../utils/axios';
-import { Table, Tag, Space, Tooltip } from 'antd';
+import { Table, Tag, Space, Tooltip, Form, Input, Button, Select } from 'antd';
 import { useState, useEffect } from 'react';
 
 import './index.scss';
 
+const { Option } = Select;
+
 function Stadium() {
   const [stadiumList, setStadiumList] = useState([]);
+  const [bossList, setBossList] = useState([]);
 
   useEffect(() => {
     getList();
+    getBossList();
   }, []);
 
-  const getList = () => {
-    axios.post('/stadium/adminList', {}).then((res) => {
-      console.log(res);
+  const getList = (params = {}) => {
+    axios.post('/stadium/adminList', params).then((res) => {
       setStadiumList(res);
+    });
+  };
+
+  const getBossList = () => {
+    axios.post('/user/findBossList', {}).then((res) => {
+      setBossList(res);
     });
   };
 
@@ -121,8 +130,52 @@ function Stadium() {
     ,
   ];
 
+  const onFinish = (values) => {
+    console.log(values);
+    getList(values);
+  };
+
+  const onChange = (val) => {
+    console.log(val);
+  };
+
+  const onSearch = (val) => {
+    console.log(val);
+  };
+
   return (
     <div className="Stadium">
+      <Form
+        name="StadiumSearch"
+        colon={false}
+        onFinish={onFinish}
+        autoComplete="off"
+      >
+        <Form.Item label="场主" name="bossId">
+          <Select
+            allowClear
+            placeholder="Select a person"
+            optionFilterProp="children"
+            onChange={onChange}
+            onSearch={onSearch}
+          >
+            {bossList.map((boss) => {
+              return <Option value={boss.bossId}>{boss.nickName}</Option>;
+            })}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{
+            offset: 10,
+          }}
+        >
+          <Button type="primary" htmlType="submit">
+            搜索
+          </Button>
+        </Form.Item>
+      </Form>
+
       <Table
         rowKey={(record) => record.id}
         columns={columns}
