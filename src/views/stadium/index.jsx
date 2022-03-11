@@ -1,5 +1,5 @@
 import axios from '../../utils/axios';
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Space, Tooltip } from 'antd';
 import { useState, useEffect } from 'react';
 
 import './index.scss';
@@ -27,54 +27,85 @@ function Stadium() {
     },
     {
       title: '场主',
-      key: 'bossInfo',
-      dataIndex: 'bossInfo',
-      render: (bossInfo) => <span>
-        <img className={'avatarUrl'} src={bossInfo?.avatarUrl} />
-        <span>{bossInfo?.nickName}</span>
-      </span>,
+      key: 'user',
+      dataIndex: 'user',
+      render: (user) => (
+        <span>
+          <img className={'avatarUrl'} src={user?.avatarUrl} />
+          <span>{user?.nickName}</span>
+        </span>
+      ),
     },
     {
-      title: '球场',
-      key: 'stadiumId',
-      dataIndex: 'stadiumId',
-      render: (stadiumId) => <span>{stadiumId.name}</span>,
+      title: '场馆名称',
+      key: 'name',
+      dataIndex: 'name',
+      render: (name) => <span>{name}</span>,
     },
     {
-      title: '场地',
-      key: 'spaceId',
-      dataIndex: 'spaceId',
-      render: (spaceId) => <span>{spaceId.name}</span>,
+      title: '场馆状态',
+      key: 'validFlag',
+      dataIndex: 'validFlag',
+      render: (validFlag) => (
+        <Tag color={validFlag ? 'success' : 'error'}>
+          {validFlag ? '已生效' : '未生效'}
+        </Tag>
+      ),
     },
     {
-      title: '场次',
-      key: 'matchId',
-      dataIndex: 'matchId',
-      render: (matchId) => <span>{matchId.runDate}-{matchId.startAt}-{matchId.endAt}</span>,
+      title: '场馆电话',
+      key: 'phoneNum',
+      dataIndex: 'phoneNum',
+      render: (phoneNum) => <span>{phoneNum}</span>,
     },
     {
-      title: '是否新购月卡',
-      key: 'newMonthlyCard',
-      dataIndex: 'newMonthlyCard',
-      render: (newMonthlyCard) => <span>{newMonthlyCard ? '是' : '否'}</span>,
+      title: '月卡状态',
+      key: 'monthlyCardStatus',
+      dataIndex: 'monthlyCardStatus',
+      render: (monthlyCardStatus) => (
+        <Tag color={monthlyCardStatus ? 'success' : 'error'}>
+          {monthlyCardStatus ? '开启' : '关闭'}
+        </Tag>
+      ),
     },
     {
-      title: '是否月卡支付',
-      key: 'isMonthlyCard',
-      dataIndex: 'isMonthlyCard',
-      render: (isMonthlyCard) => <span>{isMonthlyCard ? '是' : '否'}</span>,
+      title: '月卡价格',
+      key: 'monthlyCardPrice',
+      dataIndex: 'monthlyCardPrice',
+      render: (monthlyCardPrice) => <span>{monthlyCardPrice}</span>,
     },
     {
-      title: '支付金额',
-      key: 'payAmount',
-      dataIndex: 'payAmount',
-      render: (payAmount) => <span>{payAmount.toFixed(2)}</span>,
+      title: '关联微信群',
+      key: 'wxGroup',
+      dataIndex: 'wxGroup',
+      render: (wxGroup) => <span>{wxGroup || '--'}</span>,
     },
     {
-      title: '报名人数',
-      key: 'personCount',
-      dataIndex: 'personCount',
-      render: (personCount) => <span>{personCount}</span>,
+      title: '场馆地址',
+      key: 'address',
+      dataIndex: 'address',
+      render: (address) => <span>{address}</span>,
+    },
+    {
+      title: '经纬度',
+      render: ({ longitude, latitude }) => (
+        <span>
+          {longitude},{latitude}
+        </span>
+      ),
+    },
+    {
+      title: '场馆描述',
+      key: 'description',
+      dataIndex: 'description',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (description) => (
+        <Tooltip placement="topLeft" title={description}>
+          {description}
+        </Tooltip>
+      ),
     },
     // {
     //   title: '操作',
@@ -87,6 +118,7 @@ function Stadium() {
     //     </Space>
     //   ),
     // },
+    ,
   ];
 
   return (

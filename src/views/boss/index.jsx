@@ -1,15 +1,15 @@
 import axios from '../../utils/axios';
-import {Table, Tag, Space, Modal, Input, message} from 'antd';
-import { useState, useEffect } from 'react';
+import { Table, Tag, Space, Modal, Input, message, Form, Button } from 'antd';
+import { useState, useEffect, useRef } from 'react';
 
 import './index.scss';
 
 function Boss() {
+  const formRef = useRef(null);
   const [bossList, setBossList] = useState([]);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [stadiumInfo, setStadiumInfo] = useState({});
-  const [stadiumName, setStadiumName] = useState('');
 
   useEffect(() => {
     getList();
@@ -17,7 +17,6 @@ function Boss() {
 
   const getList = () => {
     axios.post('/user/findBossList', {}).then((res) => {
-      console.log(res);
       setBossList(res);
     });
   };
@@ -46,45 +45,31 @@ function Boss() {
     {
       title: '操作',
       key: 'action',
-      render: ({ id, bossStatus, bossId, phoneNum }) => (
+      render: ({ id, bossStatus, bossId, bossPhoneNum }) => (
         <Space size="middle">
           {/*<a onClick={() => changeBoss(id, bossStatus)}>*/}
           {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
           {/*</a>*/}
-          <a onClick={() => showAddDialog({ bossId, phoneNum })}>添加球场</a>
+          <a onClick={() => showAddDialog({ bossId, bossPhoneNum })}>
+            添加球场
+          </a>
         </Space>
       ),
     },
   ];
 
-  // const changeBoss = (id, bossStatus) => {
-  //   axios
-  //     .post('/user/changeBossStatus', {
-  //       id,
-  //       bossStatus: !bossStatus,
-  //     })
-  //     .then((res) => {
-  //       getList();
-  //     });
-  // };
-
   const showAddDialog = (stadiumInfo) => {
     setStadiumInfo(stadiumInfo);
     setVisible(true);
+    formRef.current.setFieldsValue({
+      phoneNum: stadiumInfo.bossPhoneNum,
+    });
   };
 
-  const handleStadiumName = (event) => {
-    const value = event.target.value;
-    setStadiumName(value);
-  };
-
-  const addStadium = async () => {
-    if (!stadiumName) {
-      await message.warning('请输入球场名称');
-      return
-    }
+  const onFinish = (values) => {
     setConfirmLoading(true);
-    const { bossId, phoneNum } = stadiumInfo;
+    const { bossId } = stadiumInfo;
+    const { phoneNum, stadiumName } = values;
     axios
       .post('/stadium/add', {
         bossId,
@@ -105,11 +90,10 @@ function Boss() {
         wxGroupId: '',
         welcomeWords: '',
       })
-      .then((res) => {
+      .then(async () => {
         setConfirmLoading(false);
-        setVisible(false);
-        setStadiumInfo({});
-        setStadiumName('');
+        onCancel();
+        await message.success('球场添加成功!');
         getList();
       })
       .catch((err) => {
@@ -121,8 +105,8 @@ function Boss() {
   const onCancel = () => {
     setVisible(false);
     setStadiumInfo({});
-    setStadiumName('');
-  }
+    formRef.current.resetFields();
+  };
 
   return (
     <div className="Boss">
@@ -133,19 +117,60 @@ function Boss() {
       />
       <Modal
         title="添加球场"
+        forceRender
         visible={visible}
-        okText="确定"
-        cancelText="取消"
-        onOk={() => addStadium()}
-        confirmLoading={confirmLoading}
+        wrapClassName="boss-modal"
+        footer={null}
         onCancel={() => onCancel()}
       >
-        <Input
-          maxLength={12}
-          value={stadiumName}
-          placeholder="请输入球场名称"
-          onChange={(event) => handleStadiumName(event)}
-        />
+        <Form
+          name="BossForm"
+          ref={formRef}
+          colon={false}
+          onFinish={onFinish}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="球场名称"
+            name="stadiumName"
+            rules={[
+              {
+                required: true,
+                message: '请输入球场名称!',
+              },
+            ]}
+          >
+            <Input allowClear placeholder="请输入球场名称" />
+          </Form.Item>
+
+          <Form.Item
+            label="联系电话"
+            name="phoneNum"
+            rules={[
+              {
+                required: true,
+                message: '请输入联系电话!',
+              },
+            ]}
+          >
+            <Input allowClear maxLength={11} placeholder="请输入联系电话" />
+          </Form.Item>
+
+          <Form.Item>
+            <div className="btn-wrap">
+              <Space>
+                <Button onClick={() => onCancel()}>取消</Button>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={confirmLoading}
+                >
+                  确定
+                </Button>
+              </Space>
+            </div>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

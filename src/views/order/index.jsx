@@ -42,19 +42,23 @@ function Order() {
       title: '下单用户',
       key: 'nickName',
       dataIndex: 'user',
-      render: (user) => <span>
-        <img className={'avatarUrl'} src={user.avatarUrl} />
-        <span>{user.nickName}</span>
-      </span>,
+      render: (user) => (
+        <span>
+          <img className={'avatarUrl'} src={user.avatarUrl} />
+          <span>{user.nickName}</span>
+        </span>
+      ),
     },
     {
       title: '场主',
       key: 'bossInfo',
       dataIndex: 'bossInfo',
-      render: (bossInfo) => <span>
-        <img className={'avatarUrl'} src={bossInfo?.avatarUrl} />
-        <span>{bossInfo?.nickName}</span>
-      </span>,
+      render: (bossInfo) => (
+        <span>
+          <img className={'avatarUrl'} src={bossInfo?.avatarUrl} />
+          <span>{bossInfo?.nickName}</span>
+        </span>
+      ),
     },
     {
       title: '球场',
@@ -72,7 +76,11 @@ function Order() {
       title: '场次',
       key: 'matchId',
       dataIndex: 'matchId',
-      render: (matchId) => <span>{matchId.runDate}-{matchId.startAt}-{matchId.endAt}</span>,
+      render: (matchId) => (
+        <span>
+          {matchId?.runDate}-{matchId?.startAt}-{matchId?.endAt}
+        </span>
+      ),
     },
     {
       title: '是否新购月卡',
