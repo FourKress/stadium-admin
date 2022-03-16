@@ -1,8 +1,15 @@
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Space, Form, Select, Button } from 'antd';
 import { useState, useEffect } from 'react';
 import axios from '../../utils/axios';
 
 import './index.scss';
+
+const { Option } = Select;
+
+const appleStatusList = [
+  { label: '是', value: true },
+  { label: '否', value: false },
+];
 
 function User() {
   const [userList, setUserList] = useState([]);
@@ -11,11 +18,24 @@ function User() {
     getList();
   }, []);
 
-  const getList = () => {
-    axios.post('/user/findUserList', {}).then((res) => {
+  const getList = (params = {}) => {
+    axios.post('/user/findUserList', params).then((res) => {
       console.log(res);
       setUserList(res);
     });
+  };
+
+  const onFinish = (values) => {
+    console.log(values);
+    getList(values);
+  };
+
+  const onChange = (val) => {
+    console.log(val);
+  };
+
+  const onSearch = (val) => {
+    console.log(val);
   };
 
   const columns = [
@@ -54,6 +74,36 @@ function User() {
 
   return (
     <div className="User">
+      <Form
+        name="UserSearch"
+        colon={false}
+        onFinish={onFinish}
+        autoComplete="off"
+      >
+        <Form.Item label="是否申请" name="isApplyForBoss">
+          <Select
+            allowClear
+            placeholder="Select a person"
+            optionFilterProp="children"
+            onChange={onChange}
+            onSearch={onSearch}
+          >
+            {appleStatusList.map((item) => {
+              return <Option value={item.value}>{item.label}</Option>;
+            })}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{
+            offset: 10,
+          }}
+        >
+          <Button type="primary" htmlType="submit">
+            搜索
+          </Button>
+        </Form.Item>
+      </Form>
       <Table
         rowKey={(record) => record.id}
         columns={columns}
