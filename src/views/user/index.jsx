@@ -44,6 +44,16 @@ function User() {
       render: (src) => <img className={'avatarUrl'} src={src} />,
     },
     {
+      title: '是否申请',
+      dataIndex: 'isApplyForBoss',
+      key: 'isApplyForBoss',
+      render: (isApplyForBoss) => (
+        <Tag color={isApplyForBoss ? 'success' : 'error'}>
+          {isApplyForBoss ? '已申请' : '未申请'}
+        </Tag>
+      ),
+    },
+    {
       title: '操作',
       key: 'action',
       render: ({ id }) => (
