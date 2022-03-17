@@ -30,14 +30,6 @@ function User() {
     getList(values);
   };
 
-  const onChange = (val) => {
-    console.log(val);
-  };
-
-  const onSearch = (val) => {
-    console.log(val);
-  };
-
   const columns = [
     {
       title: '用户微信昵称',
@@ -85,11 +77,13 @@ function User() {
             allowClear
             placeholder="Select a person"
             optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
           >
             {appleStatusList.map((item) => {
-              return <Option value={item.value}>{item.label}</Option>;
+              return (
+                <Option key={item.value} value={item.value}>
+                  {item.label}
+                </Option>
+              );
             })}
           </Select>
         </Form.Item>

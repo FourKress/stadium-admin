@@ -116,18 +116,18 @@ function Stadium() {
         </Tooltip>
       ),
     },
-    // {
-    //   title: '操作',
-    //   key: 'action',
-    //   render: ({ id, bossStatus }) => (
-    //     <Space size="middle">
-    //       <a onClick={() => changeOrder(id, bossStatus)}>
-    //         {bossStatus ? '禁用场主' : '启用场主'}
-    //       </a>
-    //     </Space>
-    //   ),
-    // },
-    ,
+    {
+      title: '操作',
+      key: 'action',
+      render: ({ id, bossStatus, bossId }) => (
+        <Space size="middle">
+          {/*<a onClick={() => changeOrder(id, bossStatus)}>*/}
+          {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
+          {/*</a>*/}
+          <a onClick={() => getRevenueInfo(bossId)}>查看营收</a>
+        </Space>
+      ),
+    },
   ];
 
   const onFinish = (values) => {
@@ -135,12 +135,14 @@ function Stadium() {
     getList(values);
   };
 
-  const onChange = (val) => {
-    console.log(val);
-  };
-
-  const onSearch = (val) => {
-    console.log(val);
+  const getRevenueInfo = (bossId) => {
+    axios
+      .get('/order/monthAndAayStatistics', {
+        params: {
+          bossId,
+        },
+      })
+      .then((res) => {});
   };
 
   return (
@@ -156,11 +158,13 @@ function Stadium() {
             allowClear
             placeholder="Select a person"
             optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
           >
             {bossList.map((boss) => {
-              return <Option value={boss.bossId}>{boss.nickName}</Option>;
+              return (
+                <Option key={boss.bossId} value={boss.bossId}>
+                  {boss.nickName}
+                </Option>
+              );
             })}
           </Select>
         </Form.Item>
