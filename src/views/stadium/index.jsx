@@ -1,4 +1,4 @@
-import axios from "../../utils/axios";
+import axios from '../../utils/axios';
 import {
   Table,
   Tag,
@@ -12,20 +12,23 @@ import {
   Button,
   Select,
   DatePicker,
-} from "antd";
-import { useState, useEffect } from "react";
-import moment from "moment";
+  Collapse,
+} from 'antd';
+import { useState, useEffect } from 'react';
+import moment from 'moment';
 
-import "./index.scss";
+import './index.scss';
 
+const { Panel } = Collapse;
 const { Option } = Select;
 
 function Stadium() {
   const [stadiumList, setStadiumList] = useState([]);
   const [bossList, setBossList] = useState([]);
   const [revenueInfo, setRevenueInfo] = useState({ visible: false });
-  const [runDate, setRunDate] = useState(moment().format("YYYY-MM-DD"));
+  const [runDate, setRunDate] = useState('');
   const [matchCoverOrderList, setMatchCoverOrderList] = useState([]);
+  const [payInfo, setPayInfo] = useState({ success: [], isSuccess: false });
 
   useEffect(() => {
     getList();
@@ -33,87 +36,87 @@ function Stadium() {
   }, []);
 
   const getList = (params = {}) => {
-    axios.post("/stadium/adminList", params).then((res) => {
+    axios.post('/stadium/adminList', params).then((res) => {
       setStadiumList(res);
     });
   };
 
   const getBossList = () => {
-    axios.post("/user/findBossList", {}).then((res) => {
+    axios.post('/user/findBossList', {}).then((res) => {
       setBossList(res);
     });
   };
 
   const columns = [
     {
-      title: "场馆ID",
-      key: "id",
-      dataIndex: "id",
+      title: '场馆ID',
+      key: 'id',
+      dataIndex: 'id',
       render: (id) => <span>{id}</span>,
     },
     {
-      title: "场主",
-      key: "user",
-      dataIndex: "user",
+      title: '场主',
+      key: 'user',
+      dataIndex: 'user',
       render: (user) => (
         <span>
-          <img className={"avatarUrl"} src={user?.avatarUrl} />
+          <img className={'avatarUrl'} src={user?.avatarUrl} />
           <span>{user?.nickName}</span>
         </span>
       ),
     },
     {
-      title: "场馆名称",
-      key: "name",
-      dataIndex: "name",
+      title: '场馆名称',
+      key: 'name',
+      dataIndex: 'name',
       render: (name) => <span>{name}</span>,
     },
     {
-      title: "场馆状态",
-      key: "validFlag",
-      dataIndex: "validFlag",
+      title: '场馆状态',
+      key: 'validFlag',
+      dataIndex: 'validFlag',
       render: (validFlag) => (
-        <Tag color={validFlag ? "success" : "error"}>
-          {validFlag ? "已生效" : "未生效"}
+        <Tag color={validFlag ? 'success' : 'error'}>
+          {validFlag ? '已生效' : '未生效'}
         </Tag>
       ),
     },
     {
-      title: "场馆电话",
-      key: "phoneNum",
-      dataIndex: "phoneNum",
+      title: '场馆电话',
+      key: 'phoneNum',
+      dataIndex: 'phoneNum',
       render: (phoneNum) => <span>{phoneNum}</span>,
     },
     {
-      title: "月卡状态",
-      key: "monthlyCardStatus",
-      dataIndex: "monthlyCardStatus",
+      title: '月卡状态',
+      key: 'monthlyCardStatus',
+      dataIndex: 'monthlyCardStatus',
       render: (monthlyCardStatus) => (
-        <Tag color={monthlyCardStatus ? "success" : "error"}>
-          {monthlyCardStatus ? "开启" : "关闭"}
+        <Tag color={monthlyCardStatus ? 'success' : 'error'}>
+          {monthlyCardStatus ? '开启' : '关闭'}
         </Tag>
       ),
     },
     {
-      title: "月卡价格",
-      key: "monthlyCardPrice",
-      dataIndex: "monthlyCardPrice",
+      title: '月卡价格',
+      key: 'monthlyCardPrice',
+      dataIndex: 'monthlyCardPrice',
       render: (monthlyCardPrice) => <span>{monthlyCardPrice}</span>,
     },
     {
-      title: "关联微信群",
-      key: "wxGroup",
-      dataIndex: "wxGroup",
-      render: (wxGroup) => <span>{wxGroup || "--"}</span>,
+      title: '关联微信群',
+      key: 'wxGroup',
+      dataIndex: 'wxGroup',
+      render: (wxGroup) => <span>{wxGroup || '--'}</span>,
     },
     {
-      title: "场馆地址",
-      key: "address",
-      dataIndex: "address",
+      title: '场馆地址',
+      key: 'address',
+      dataIndex: 'address',
       render: (address) => <span>{address}</span>,
     },
     {
-      title: "经纬度",
+      title: '经纬度',
       render: ({ longitude, latitude }) => (
         <span>
           {longitude},{latitude}
@@ -121,9 +124,9 @@ function Stadium() {
       ),
     },
     {
-      title: "场馆描述",
-      key: "description",
-      dataIndex: "description",
+      title: '场馆描述',
+      key: 'description',
+      dataIndex: 'description',
       ellipsis: {
         showTitle: false,
       },
@@ -134,14 +137,14 @@ function Stadium() {
       ),
     },
     {
-      title: "操作",
-      key: "action",
+      title: '操作',
+      key: 'action',
       render: ({ id, bossStatus, bossId }) => (
         <Space size="middle">
           {/*<a onClick={() => changeOrder(id, bossStatus)}>*/}
           {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
           {/*</a>*/}
-          <a onClick={() => getRevenueInfo(id, runDate)}>查看营收</a>
+          <a onClick={() => getRevenueInfo(id)}>查看营收</a>
         </Space>
       ),
     },
@@ -152,9 +155,10 @@ function Stadium() {
     getList(values);
   };
 
-  const getRevenueInfo = (id, runDate) => {
+  const getRevenueInfo = (id, runDate = moment().format('YYYY-MM-DD')) => {
+    setRunDate(runDate);
     axios
-      .post("/order/revenueInfo", {
+      .post('/order/revenueInfo', {
         runDate,
         stadiumId: id,
       })
@@ -171,6 +175,45 @@ function Stadium() {
 
   const runDateChange = (date, dateString) => {
     getRevenueInfo(revenueInfo.stadiumId, dateString);
+  };
+
+  const handleDrawerClose = () => {
+    setRevenueInfo({ visible: false });
+  };
+
+  const handleCollapseChange = (key) => {
+    console.log(key);
+    if (!key?.length) return;
+    const matchId = key[0];
+    const match = matchCoverOrderList.find((d) => d.id === matchId);
+    axios
+      .get('/order/findOrderByMatchId', {
+        params: {
+          matchId,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        const isSuccess =
+          res?.success?.reduce((sum, curr) => sum + curr.personCount, 0) >=
+          match.minPeople;
+        setPayInfo({
+          ...res,
+          isSuccess,
+        });
+      });
+  };
+
+  const panelHeader = (name, time, amt, count, refundAmt) => {
+    return (
+      <Space size={'large'}>
+        <span>场次: {name}</span>
+        <span>时间: {time}</span>
+        <span>收入: {amt}</span>
+        <span>收入: {amt}</span>
+        <span>退款: {refundAmt}</span>
+      </Space>
+    );
   };
 
   return (
@@ -212,86 +255,127 @@ function Stadium() {
       />
 
       <Drawer
-        width={640}
+        width={840}
+        className={'stadium-drawer'}
         placement="right"
-        onClose={() => setRevenueInfo({ visible: false })}
+        onClose={() => handleDrawerClose()}
         visible={revenueInfo.visible}
+        keyboard={false}
+        maskClosable={false}
       >
         <p
           className="site-description-item-profile-p"
           style={{
-            marginBottom: 24,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <span>{revenueInfo.stadiumName}的营收详情</span>
           <DatePicker
-            defaultValue={moment(runDate, "YYYY-MM-DD")}
+            value={moment(runDate, 'YYYY-MM-DD')}
             onChange={runDateChange}
           />
         </p>
         <Divider />
-
-        {matchCoverOrderList.length > 0 &&
-          matchCoverOrderList.map((item) => {
-            return (
-              <div key={item.id}>
-                <Row>
-                  <Col span={12}>
-                    <Row>
-                      <Col span={24}>
-                        {item.startAt}-{item.endAt}
-                      </Col>
-                      <Col span={24}>{item?.space?.name}</Col>
-                    </Row>
-                  </Col>
-                  <Col span={12}>
-                    <Row>
-                      {item.selectPeople < item.minPeople ? (
-                        <Col span={24}>
-                          <span className="fail">组队失败</span>
-                          <span className="tips">
-                            差{item.minPeople - item.selectPeople}人
-                          </span>
-                        </Col>
-                      ) : (
-                        <Col span={24}>
-                          <span>
-                            <span>
-                              <span style="font-size: 18px;">+</span>
-                              <span style="font-size: 14px;">￥</span>
-                            </span>
-                            <span className="money">{item.sumPayAmount}</span>
-                          </span>
-                          <span className="tips">
-                            {item.ordinaryCount > 0 && (
-                              <span>
-                                ￥{item.rebatePrice}X{item.ordinaryCount}
-                              </span>
-                            )}
-                            {item.monthlyCardCount > 0 && (
-                              <span> + {item.monthlyCardCount}月卡</span>
-                            )}
-                            {item.refundAmt > 0 && (
-                              <span> - 退{item.refundAmt}</span>
-                            )}
-                          </span>
-                        </Col>
-                      )}
-                    </Row>
-                  </Col>
-                </Row>
-              </div>
-            );
-          })}
-        <Divider />
-
         <Row>
           <Col span={12}>今日总收入：{revenueInfo.stadiumSumAmount}</Col>
-          <Col span={12}></Col>
         </Row>
+        <Divider />
+
+        {matchCoverOrderList.length > 0 ? (
+          <Collapse onChange={handleCollapseChange}>
+            {matchCoverOrderList.map((item) => {
+              return (
+                <Panel
+                  header={panelHeader(
+                    item?.space?.name,
+                    `${item.startAt}-${item.endAt}`,
+                    item.sumPayAmount
+                  )}
+                  key={item.id}
+                >
+                  <Row>
+                    <Col span={8}>
+                      组队
+                      {payInfo.isSuccess ? '成功' : '失败'}
+                    </Col>
+                    <Col span={8}>
+                      本场收入：
+                      {payInfo.isSuccess ? payInfo.totalAmount : '0'}
+                    </Col>
+                    <Col span={8}>
+                      {payInfo.isSuccess
+                        ? `付款：${payInfo?.success?.reduce(
+                            (sum, curr) => sum + curr.personCount,
+                            0
+                          )}人`
+                        : `差：${
+                            item.minPeople -
+                            payInfo?.systemRefund?.reduce(
+                              (sum, curr) => sum + curr.personCount,
+                              0
+                            )
+                          }人`}
+                    </Col>
+                  </Row>
+                  <Divider />
+                  <Row>
+                    {(payInfo.isSuccess
+                      ? payInfo?.success
+                      : payInfo?.systemRefund
+                    )?.length > 0 && (
+                      <Col span={24}>
+                        {
+                          <span>
+                            <span>已{payInfo.isSuccess ? '付' : '退'}款</span>
+                            {!payInfo.isSuccess && <span>系统自动退款</span>}
+                          </span>
+                        }
+                      </Col>
+                    )}
+
+                    {payInfo?.cancel?.length > 0 && (
+                      <Col span={24}>
+                        <p>{<span>未付款</span>}</p>
+                        {/*<div className={'user-wrap'}>*/}
+                        {/*  {payInfo?.cancel?.map((cancel, index) => {*/}
+                        {/*    return (*/}
+                        {/*      <div className="item">*/}
+                        {/*        <span className="user">*/}
+                        {/*          <img src={cancel.user?.avatarUrl} />*/}
+                        {/*          <span className="name">*/}
+                        {/*            {cancel.user?.nickName}*/}
+                        {/*          </span>*/}
+                        {/*        </span>*/}
+                        {/*        <span className="info">*/}
+                        {/*          <span className="count">*/}
+                        {/*            报名时间：*/}
+                        {/*            {moment(cancel.createAt).format(*/}
+                        {/*              'MM-DD HH:MM'*/}
+                        {/*            )}*/}
+                        {/*          </span>*/}
+                        {/*        </span>*/}
+                        {/*      </div>*/}
+                        {/*    );*/}
+                        {/*  })}*/}
+                        {/*</div>*/}
+                      </Col>
+                    )}
+
+                    {payInfo?.selfRefund?.length > 0 && (
+                      <Col span={24}>
+                        <span>本人退款</span>
+                      </Col>
+                    )}
+                  </Row>
+                </Panel>
+              );
+            })}
+          </Collapse>
+        ) : (
+          <p>暂无场次结束, 没有收益</p>
+        )}
       </Drawer>
     </div>
   );
