@@ -204,14 +204,14 @@ function Stadium() {
       });
   };
 
-  const panelHeader = (name, time, amt, count, refundAmt) => {
+  const panelHeader = (name, time, amt, monthlyCardCount, refundAmt) => {
     return (
-      <Space size={'large'}>
+      <Space size={'middle'}>
         <span>场次: {name}</span>
         <span>时间: {time}</span>
-        <span>收入: {amt}</span>
-        <span>收入: {amt}</span>
-        <span>退款: {refundAmt}</span>
+        <span>总收入: {amt}</span>
+        <span>月卡支付: {monthlyCardCount}人</span>
+        <span>水费: {refundAmt}</span>
       </Space>
     );
   };
@@ -291,7 +291,9 @@ function Stadium() {
                   header={panelHeader(
                     item?.space?.name,
                     `${item.startAt}-${item.endAt}`,
-                    item.sumPayAmount
+                    item.sumPayAmount,
+                    item.monthlyCardCount,
+                    item.refundAmt
                   )}
                   key={item.id}
                 >

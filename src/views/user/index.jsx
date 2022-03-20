@@ -59,10 +59,22 @@ function User() {
       render: ({ id }) => (
         <Space size="middle">
           <a onClick={() => setBoss(id)}>设为场主</a>
+          <a onClick={() => rejectApply(id)}>驳回申请</a>
         </Space>
       ),
     },
   ];
+
+  const rejectApply = (id) => {
+    axios
+      .post('/user/changeApplyForBoss', {
+        id,
+        isApplyForBoss: false,
+      })
+      .then((res) => {
+        getList();
+      });
+  };
 
   const setBoss = (id) => {
     axios
