@@ -13,7 +13,9 @@ import {
   Select,
   DatePicker,
   Collapse,
+  Modal,
 } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import moment from 'moment';
 
@@ -145,6 +147,8 @@ function Stadium() {
           {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
           {/*</a>*/}
           <a onClick={() => getRevenueInfo(id)}>查看营收</a>
+
+          <a onClick={() => handleStadiumRemove(id)}>删除</a>
         </Space>
       ),
     },
@@ -171,6 +175,24 @@ function Stadium() {
         });
         setMatchCoverOrderList(res.matchCoverOrderList);
       });
+  };
+
+  const handleStadiumRemove = (stadiumId) => {
+    Modal.confirm({
+      title: '确定删除给场馆吗?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        axios
+          .get('/stadium/remove', {
+            params: {
+              stadiumId,
+            },
+          })
+          .then(() => {
+            getList();
+          });
+      },
+    });
   };
 
   const runDateChange = (date, dateString) => {
