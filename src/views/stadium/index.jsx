@@ -24,6 +24,11 @@ import './index.scss';
 const { Panel } = Collapse;
 const { Option } = Select;
 
+const appleStatusList = [
+  { label: '是', value: true },
+  { label: '否', value: false },
+];
+
 function Stadium() {
   const [stadiumList, setStadiumList] = useState([]);
   const [bossList, setBossList] = useState([]);
@@ -246,17 +251,39 @@ function Stadium() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item label="场主" name="bossId">
-          <Select allowClear placeholder="选择场主" optionFilterProp="children">
-            {bossList.map((boss) => {
-              return (
-                <Option key={boss.bossId} value={boss.bossId}>
-                  {boss.nickName}
-                </Option>
-              );
-            })}
-          </Select>
-        </Form.Item>
+        <Row>
+          <Col span={8}>
+            <Form.Item label="场主" name="bossId">
+              <Select
+                listItemHeight={10}
+                listHeight={210}
+                allowClear
+                placeholder="选择场主"
+              >
+                {bossList.map((boss) => {
+                  return (
+                    <Option key={boss.bossId} value={boss.bossId}>
+                      {boss.nickName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="申请机器人" name="applyBot">
+              <Select allowClear placeholder="Select a person">
+                {appleStatusList.map((item) => {
+                  return (
+                    <Option key={item.value} value={item.value}>
+                      {item.label}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item
           wrapperCol={{

@@ -95,11 +95,7 @@ function User() {
         autoComplete="off"
       >
         <Form.Item label="是否申请" name="isApplyForBoss">
-          <Select
-            allowClear
-            placeholder="Select a person"
-            optionFilterProp="children"
-          >
+          <Select allowClear placeholder="Select a person">
             {appleStatusList.map((item) => {
               return (
                 <Option key={item.value} value={item.value}>
