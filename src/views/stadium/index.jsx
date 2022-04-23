@@ -89,6 +89,20 @@ function Stadium() {
       ),
     },
     {
+      title: '机器人状态',
+      key: 'botStatus',
+      render: ({ botStatus, applyBot, wxGroupId }) =>
+        botStatus ? (
+          <Tag color={wxGroupId ? 'success' : 'error'}>
+            {wxGroupId ? '已使用' : '未使用'}
+          </Tag>
+        ) : (
+          <Tag color={applyBot ? 'success' : 'error'}>
+            {applyBot ? '已申请' : '未申请'}
+          </Tag>
+        ),
+    },
+    {
       title: '场馆电话',
       key: 'phoneNum',
       dataIndex: 'phoneNum',
@@ -146,18 +160,35 @@ function Stadium() {
     {
       title: '操作',
       key: 'action',
-      render: ({ id, bossStatus, bossId }) => (
+      width: 340,
+      render: ({ id, applyBot, botStatus, bossId }) => (
         <Space size="middle">
           {/*<a onClick={() => changeOrder(id, bossStatus)}>*/}
           {/*  {bossStatus ? '禁用场主' : '启用场主'}*/}
           {/*</a>*/}
           <a onClick={() => getRevenueInfo(id)}>查看营收</a>
-
-          <a onClick={() => handleStadiumRemove(id)}>删除</a>
+          {applyBot && !botStatus && (
+            <a onClick={() => changeBotStatus(id, true)}>开启机器人</a>
+          )}
+          {applyBot && !botStatus && (
+            <a onClick={() => changeBotStatus(id, false)}>驳回申请</a>
+          )}
+          <a onClick={() => handleStadiumRemove(id)}>删除场馆</a>
         </Space>
       ),
     },
   ];
+
+  const changeBotStatus = (stadiumId, status) => {
+    axios
+      .post('/stadium/changeBotStatus', {
+        botStatus: status,
+        stadiumId,
+      })
+      .then(() => {
+        getList();
+      });
+  };
 
   const onFinish = (values) => {
     console.log(values);
@@ -271,7 +302,7 @@ function Stadium() {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="申请机器人" name="applyBot">
+            <Form.Item label="机器人申请" name="applyBot">
               <Select allowClear placeholder="Select a person">
                 {appleStatusList.map((item) => {
                   return (
@@ -342,7 +373,7 @@ function Stadium() {
                     `${item.startAt}-${item.endAt}`,
                     item.sumPayAmount,
                     item.monthlyCardCount,
-                    item.refundAmt
+                    item.refundAmt,
                   )}
                   key={item.id}
                 >
@@ -359,13 +390,13 @@ function Stadium() {
                       {payInfo.isSuccess
                         ? `付款：${payInfo?.success?.reduce(
                             (sum, curr) => sum + curr.personCount,
-                            0
+                            0,
                           )}人`
                         : `差：${
                             item.minPeople -
                             payInfo?.systemRefund?.reduce(
                               (sum, curr) => sum + curr.personCount,
-                              0
+                              0,
                             )
                           }人`}
                     </Col>

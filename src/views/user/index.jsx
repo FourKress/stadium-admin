@@ -56,10 +56,10 @@ function User() {
     {
       title: '操作',
       key: 'action',
-      render: ({ id }) => (
+      render: ({ id, isApplyForBoss }) => (
         <Space size="middle">
           <a onClick={() => setBoss(id)}>设为场主</a>
-          <a onClick={() => rejectApply(id)}>驳回申请</a>
+          {isApplyForBoss && <a onClick={() => rejectApply(id)}>驳回申请</a>}
         </Space>
       ),
     },
