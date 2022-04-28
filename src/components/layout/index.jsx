@@ -13,6 +13,7 @@ const User = lazy(() => import('../../views/user'));
 const Boss = lazy(() => import('../../views/boss'));
 const Stadium = lazy(() => import('../../views/stadium'));
 const Revenue = lazy(() => import('../../views/revenue'));
+const Withdraw = lazy(() => import('../../views/withdraw'));
 
 const { Content } = Layout;
 
@@ -30,6 +31,7 @@ function MyLayout() {
               <Route path="/boss" element={<Boss />} />
               <Route path="/stadium" element={<Stadium />} />
               <Route path="/" element={<Revenue />} />
+              <Route path="/withdraw" element={<Withdraw />} />
             </Routes>
           </div>
         </Content>
