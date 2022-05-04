@@ -173,7 +173,7 @@ function Stadium() {
           {applyBot && !botStatus && (
             <a onClick={() => changeBotStatus(id, false)}>驳回申请</a>
           )}
-          <a onClick={() => handleStadiumRemove(id)}>删除场馆</a>
+          <a onClick={() => handleStadiumRemove(id, bossId)}>删除场馆</a>
         </Space>
       ),
     },
@@ -213,16 +213,15 @@ function Stadium() {
       });
   };
 
-  const handleStadiumRemove = (stadiumId) => {
+  const handleStadiumRemove = (stadiumId, bossId) => {
     Modal.confirm({
       title: '确定删除给场馆吗?',
       icon: <ExclamationCircleOutlined />,
       onOk() {
         axios
-          .get('/stadium/remove', {
-            params: {
-              stadiumId,
-            },
+          .post('/stadium/remove', {
+            stadiumId,
+            bossId,
           })
           .then(() => {
             getList();
