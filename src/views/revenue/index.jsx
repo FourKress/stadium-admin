@@ -1,4 +1,4 @@
-import axios from "../../utils/axios";
+import axios from '../../utils/axios';
 import {
   Table,
   Space,
@@ -8,18 +8,20 @@ import {
   Divider,
   DatePicker,
   Collapse,
-} from "antd";
-import { useState, useEffect } from "react";
-import moment from "moment";
+  Form,
+  Button,
+} from 'antd';
+import { useState, useEffect } from 'react';
+import moment from 'moment';
 
-import "./index.scss";
+import './index.scss';
 
 const { Panel } = Collapse;
 
 function Revenue() {
   const [stadiumList, setStadiumList] = useState([]);
   const [revenueInfo, setRevenueInfo] = useState({ visible: false });
-  const [runDate, setRunDate] = useState("");
+  const [runDate, setRunDate] = useState(moment().format('YYYY-MM-DD'));
   const [matchCoverOrderList, setMatchCoverOrderList] = useState([]);
   const [payInfo, setPayInfo] = useState({ success: [], isSuccess: false });
 
@@ -28,10 +30,14 @@ function Revenue() {
   }, []);
 
   const getList = (params = {}) => {
+    const { runDate } = params;
+    const runDateStr = moment(runDate).format('YYYY-MM-DD');
+    setRunDate(runDateStr);
     axios
-      .get("/match/getToDayRevenue", {
+      .get('/match/getToDayRevenue', {
         params: {
-          runDate: moment().format("YYYY-MM-DD"),
+          ...params,
+          runDate: runDateStr,
         },
       })
       .then((res) => {
@@ -41,27 +47,27 @@ function Revenue() {
 
   const columns = [
     {
-      title: "场馆ID",
-      key: "id",
-      dataIndex: "id",
+      title: '场馆ID',
+      key: 'id',
+      dataIndex: 'id',
       render: (id) => <span>{id}</span>,
     },
     {
-      title: "场馆名称",
-      key: "name",
-      dataIndex: "name",
+      title: '场馆名称',
+      key: 'name',
+      dataIndex: 'name',
       render: (name) => <span>{name}</span>,
     },
     {
-      title: "场馆电话",
-      key: "phoneNum",
-      dataIndex: "phoneNum",
+      title: '场馆电话',
+      key: 'phoneNum',
+      dataIndex: 'phoneNum',
       render: (phoneNum) => <span>{phoneNum}</span>,
     },
 
     {
-      title: "操作",
-      key: "action",
+      title: '操作',
+      key: 'action',
       render: ({ id }) => (
         <Space size="middle">
           <a onClick={() => getRevenueInfo(id)}>查看营收</a>
@@ -70,10 +76,9 @@ function Revenue() {
     },
   ];
 
-  const getRevenueInfo = (id, runDate = moment().format("YYYY-MM-DD")) => {
-    setRunDate(runDate);
+  const getRevenueInfo = (id) => {
     axios
-      .post("/order/revenueInfo", {
+      .post('/order/revenueInfo', {
         runDate,
         stadiumId: id,
       })
@@ -88,10 +93,6 @@ function Revenue() {
       });
   };
 
-  const runDateChange = (date, dateString) => {
-    getRevenueInfo(revenueInfo.stadiumId, dateString);
-  };
-
   const handleDrawerClose = () => {
     setRevenueInfo({ visible: false });
   };
@@ -102,7 +103,7 @@ function Revenue() {
     const matchId = key[0];
     const match = matchCoverOrderList.find((d) => d.id === matchId);
     axios
-      .get("/order/findOrderByMatchId", {
+      .get('/order/findOrderByMatchId', {
         params: {
           matchId,
         },
@@ -121,7 +122,7 @@ function Revenue() {
 
   const panelHeader = (name, time, amt, monthlyCardCount, refundAmt) => {
     return (
-      <Space size={"middle"}>
+      <Space size={'middle'}>
         <span>场次: {name}</span>
         <span>时间: {time}</span>
         <span>总收入: {amt}</span>
@@ -131,8 +132,37 @@ function Revenue() {
     );
   };
 
+  const onFinish = (values) => {
+    getList(values);
+  };
+
   return (
     <div className="Revenue">
+      <Form
+        name="RevenueSearch"
+        initialValues={{
+          runDate: moment(),
+        }}
+        colon={false}
+        onFinish={onFinish}
+        autoComplete="off"
+      >
+        <Row>
+          <Col span={8}>
+            <Form.Item label="场主" name="runDate">
+              <DatePicker />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                搜索
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+
       <Table
         rowKey={(record) => record.id}
         columns={columns}
@@ -142,7 +172,7 @@ function Revenue() {
 
       <Drawer
         width={840}
-        className={"revenue-drawer"}
+        className={'revenue-drawer'}
         placement="right"
         onClose={() => handleDrawerClose()}
         visible={revenueInfo.visible}
@@ -152,16 +182,12 @@ function Revenue() {
         <p
           className="site-description-item-profile-p"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <span>{revenueInfo.stadiumName}的营收详情</span>
-          <DatePicker
-            value={moment(runDate, "YYYY-MM-DD")}
-            onChange={runDateChange}
-          />
         </p>
         <Divider />
         <Row>
@@ -179,30 +205,30 @@ function Revenue() {
                     `${item.startAt}-${item.endAt}`,
                     item.sumPayAmount,
                     item.monthlyCardCount,
-                    item.refundAmt
+                    item.refundAmt,
                   )}
                   key={item.id}
                 >
                   <Row>
                     <Col span={8}>
                       组队
-                      {payInfo.isSuccess ? "成功" : "失败"}
+                      {payInfo.isSuccess ? '成功' : '失败'}
                     </Col>
                     <Col span={8}>
                       本场收入：
-                      {payInfo.isSuccess ? payInfo.totalAmount : "0"}
+                      {payInfo.isSuccess ? payInfo.totalAmount : '0'}
                     </Col>
                     <Col span={8}>
                       {payInfo.isSuccess
                         ? `付款：${payInfo?.success?.reduce(
                             (sum, curr) => sum + curr.personCount,
-                            0
+                            0,
                           )}人`
                         : `差：${
                             item.minPeople -
                             payInfo?.systemRefund?.reduce(
                               (sum, curr) => sum + curr.personCount,
-                              0
+                              0,
                             )
                           }人`}
                     </Col>
@@ -216,7 +242,7 @@ function Revenue() {
                       <Col span={24}>
                         {
                           <span>
-                            <span>已{payInfo.isSuccess ? "付" : "退"}款</span>
+                            <span>已{payInfo.isSuccess ? '付' : '退'}款</span>
                             {!payInfo.isSuccess && <span>系统自动退款</span>}
                           </span>
                         }
