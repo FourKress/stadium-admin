@@ -1,0 +1,17 @@
+.bot {
+  .tips {
+    display: flex;
+    align-items: center;
+    height: 32px;
+  }
+}
+
+.bot-modal {
+  .ant-form-item:last-child {
+    margin-bottom: 0;
+  }
+  .btn-wrap {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
