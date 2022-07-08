@@ -10,6 +10,7 @@ import {
   Row,
   Col,
 } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState, useEffect, useRef } from 'react';
 
 import './index.scss';
@@ -32,14 +33,14 @@ function Bot() {
   const onFinish = (values) => {
     setConfirmLoading(true);
     const { token } = values;
-    console.log(token);
-    return;
     axios
-      .post('http:localhost:4927/bot/start', {})
+      .post('/botApi/bot/start', {
+        token,
+      })
       .then(async () => {
         setConfirmLoading(false);
         onCancel();
-        await message.success('球场添加成功!');
+        await message.success('Token更换成功!');
       })
       .catch((err) => {
         setConfirmLoading(false);
@@ -66,6 +67,19 @@ function Bot() {
       } else {
         message.warning('暂无登录二维码链接!');
       }
+    });
+  };
+
+  const restart = async () => {
+    Modal.confirm({
+      title: '确定重启机器人吗?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        axios.get('/botApi/bot/restart').then(() => {
+          updateStatus();
+          message.warning('机器人重启成功!');
+        });
+      },
     });
   };
 
@@ -99,7 +113,7 @@ function Bot() {
         <Row>
           <Space>
             <Col span={4}>
-              <Button type="primary" onClick={() => getQrCode()}>
+              <Button type="primary" onClick={() => restart()}>
                 重启机器人
               </Button>
             </Col>
