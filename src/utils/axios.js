@@ -4,7 +4,7 @@ import { message, Modal } from 'antd';
 import { createLoading, closeLoading } from '../components/loading';
 
 const Axios = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api`,
   timeout: 30000,
 });
 
@@ -49,7 +49,7 @@ Axios['interceptors'].request.use(
       hideLoading();
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 // 返回后拦截
@@ -70,7 +70,7 @@ Axios['interceptors'].response.use(
     }
   },
   async (err) => {
-    const {statusCode, message : msg} = err.response.data;
+    const { statusCode, message: msg } = err.response.data;
     if (err.config.headers['isLoading'] !== false) {
       hideLoading();
     }
@@ -83,18 +83,18 @@ Axios['interceptors'].response.use(
         title: '提示',
         okText: '确定',
         okButtonProps: {
-          href: '/#/login'
-        }
+          href: '/#/login',
+        },
       });
-    } else if(statusCode === 400) {
+    } else if (statusCode === 400) {
       await message.warning(msg);
-    }else if (err.message === 'Network Error') {
+    } else if (err.message === 'Network Error') {
       await message.warning('网络连接异常！');
     } else if (err.code === 'ECONNABORTED') {
       await message.warning('请求超时，请重试');
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 // 把组件引入，并定义成原型属性方便使用

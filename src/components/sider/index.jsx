@@ -6,6 +6,7 @@ import {
   BarChartOutlined,
   FundOutlined,
   RedditOutlined,
+  ProfileOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './index.scss';
@@ -49,6 +50,9 @@ function MySider() {
           </Menu.Item>
           <Menu.Item key="bot" icon={<RedditOutlined />}>
             机器人管理
+          </Menu.Item>
+          <Menu.Item key="suggestions" icon={<ProfileOutlined />}>
+            投诉建议
           </Menu.Item>
         </Menu>
       </div>
