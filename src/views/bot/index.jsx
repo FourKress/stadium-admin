@@ -12,7 +12,7 @@ import {
 } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState, useEffect, useRef } from 'react';
-
+import QRCode from 'qrcode';
 import './index.scss';
 
 function Bot() {
@@ -62,8 +62,33 @@ function Bot() {
 
   const getQrCode = async () => {
     axios.get('/botApi/bot/qrcodeLink').then((res) => {
-      if (res?.qrcodeLink) {
-        message.success(res.qrcodeLink);
+      if (!res?.qrcodeLink) {
+        // message.success(res.qrcodeLink);
+        setTimeout(() => {
+          const canvas = document.querySelector('#canvas');
+          QRCode.toCanvas(
+            canvas,
+            res.qrcodeLink,
+            { width: 256, height: 256 },
+            (error) => {
+              if (error) {
+                console.log('error', error);
+                return;
+              }
+            },
+          );
+        }, 100);
+
+        Modal.success({
+          title: '登录二维码',
+          icon: '',
+          centered: true,
+          content: (
+            <div className={'canvas-content'}>
+              <canvas id="canvas"></canvas>
+            </div>
+          ),
+        });
       } else {
         message.warning('暂无登录二维码链接!');
       }
