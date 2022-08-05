@@ -62,7 +62,7 @@ function Bot() {
 
   const getQrCode = async () => {
     axios.get('/botApi/bot/qrcodeLink').then((res) => {
-      if (!res?.qrcodeLink) {
+      if (res?.qrcodeLink) {
         // message.success(res.qrcodeLink);
         setTimeout(() => {
           const canvas = document.querySelector('#canvas');
