@@ -95,6 +95,12 @@ function Bot() {
     });
   };
 
+  const logout = async () => {
+    axios.get('/botApi/bot/logout').then((res) => {
+      message.success('机器人退出成功');
+    });
+  }
+
   const restart = async () => {
     Modal.confirm({
       title: '确定重启机器人吗?',
@@ -145,6 +151,15 @@ function Bot() {
             <Col span={4}>
               <Button type="primary" onClick={() => getQrCode()}>
                 获取登录二维码
+              </Button>
+            </Col>
+          </Space>
+        </Row>
+        <Row>
+          <Space>
+            <Col span={4}>
+              <Button type="primary" onClick={() => logout()}>
+                退出机器人
               </Button>
             </Col>
           </Space>
