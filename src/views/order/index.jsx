@@ -19,16 +19,28 @@ const statusMap = {
 
 function Order() {
   const [orderList, setOrderList] = useState([]);
+  const [tablePage, setTablePage] = useState({
+    current: 1,
+    pageSize: 10,
+    total: null,
+  });
 
   useEffect(() => {
-    getList();
+    getList(tablePage);
   }, []);
 
-  const getList = () => {
-    axios.post('/order/list', {}).then((res) => {
-      console.log(res);
-      setOrderList(res);
-    });
+  const getList = (tablePage) => {
+    axios
+      .post('/order/list', {
+        pageSize: tablePage.pageSize,
+        current: tablePage.current,
+      })
+      .then((res) => {
+        console.log(res);
+        const { records = [], total, current, pageSize } = res;
+        setOrderList(records);
+        setTablePage({ total, current, pageSize });
+      });
   };
 
   const columns = [
@@ -136,6 +148,11 @@ function Order() {
     //   });
   };
 
+  const handleTableChange = (pagination) => {
+    console.log(pagination);
+    getList(pagination);
+  };
+
   return (
     <div className="Order">
       <Table
@@ -143,6 +160,8 @@ function Order() {
         columns={columns}
         dataSource={orderList}
         scroll={{ x: 1300 }}
+        pagination={tablePage}
+        onChange={handleTableChange}
       />
     </div>
   );

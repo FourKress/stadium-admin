@@ -54,6 +54,9 @@ function MySider() {
           <Menu.Item key="suggestions" icon={<ProfileOutlined />}>
             投诉建议
           </Menu.Item>
+          <Menu.Item key="balance" icon={<ProfileOutlined />}>
+            场主余额汇总
+          </Menu.Item>
         </Menu>
       </div>
     </Sider>
