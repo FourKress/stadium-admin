@@ -44,6 +44,12 @@ function User() {
       render: (src) => <img className={'avatarUrl'} src={src} />,
     },
     {
+      title: '手机号',
+      dataIndex: 'bossPhoneNum',
+      key: 'bossPhoneNum',
+      render: (bossPhoneNum) => <span>{bossPhoneNum}</span>,
+    },
+    {
       title: '是否申请',
       dataIndex: 'isApplyForBoss',
       key: 'isApplyForBoss',

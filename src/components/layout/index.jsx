@@ -41,7 +41,7 @@ function MyLayout() {
             </Routes>
           </div>
         </Content>
-        <MyFooter>Footer</MyFooter>
+        <MyFooter />
       </Layout>
     </Layout>
   );
