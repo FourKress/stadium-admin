@@ -11,4 +11,18 @@
       color: #fff;
     }
   }
+
+  .footer {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 32px;
+  }
+
+  .title {
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 28px;
+  }
 }

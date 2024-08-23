@@ -3,6 +3,7 @@ import { Form, Input, Button } from 'antd';
 
 import './index.scss';
 import axios from '../../utils/axios';
+import React from 'react';
 
 function Login() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ function Login() {
   return (
     <div className="Login">
       <div className="panel">
+        <p className={'title'}>球场通</p>
         <Form name="Login" colon={false} onFinish={onFinish} autoComplete="off">
           <Form.Item
             label="账号"
@@ -65,6 +67,8 @@ function Login() {
           </Form.Item>
         </Form>
       </div>
+
+      <div className="footer"><a href="https://beian.miit.gov.cn/" target="_blank">渝ICP备2022000107号-1</a></div>
     </div>
   );
 }
